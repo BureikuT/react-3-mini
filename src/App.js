@@ -6,6 +6,9 @@ import './App.css';
 // Toast notification dependencies
 import { ToastContainer, toast } from 'react-toastify';
 
+
+const BASE_URL = `https://joes-autos.herokuapp.com/api`
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -29,12 +32,8 @@ class App extends Component {
   }
 
   getVehicles() {
-    // axios (GET)
-    // setState with response -> vehiclesToDisplay
-    axios.get('https://joes-autos.herokuapp.com/api/vehicles').then(res => {
-      this.setState({
-        vehiclesToDisplay: res.data
-      })
+    axios.get(BASE_URL + `/vehicles`).then(response=>{
+      this.setState({vehiclesToDisplay: response.data})
     })
   }
 
@@ -44,8 +43,9 @@ class App extends Component {
   }
 
   sellCar(id) {
-    // axios (DELETE)
-    // setState with response -> vehiclesToDisplay
+    axios.delete(BASE_URL+`/vehicles/${id}`).then(results=>{
+      this.setState({vehiclesToDisplay:results.data.vehicles})
+    })
   }
 
   filterByMake() {
@@ -63,11 +63,9 @@ class App extends Component {
   }
 
   updatePrice(priceChange, id) {
-    // axios (PUT)
-    // setState with response -> vehiclesToDisplay
-    axios.put(`https://joes-autos.herokuapp.com/api/vehicles/${id}/${priceChange}`).then(res => {
+    axios.put(`${BASE_URL}/vehicles/${id}/${priceChange}`).then(response=>{
       this.setState({
-        vehiclesToDisplay: res.data.vehicles
+        vehiclesToDisplay: response.data.vehicles
       })
     })
   }
@@ -81,16 +79,9 @@ class App extends Component {
       price: this.price.value
     };
 
-    // axios (POST)
-    // setState with response -> vehiclesToDisplay
-    axios.post('https://joes-autos.herokuapp.com/api/vehicles', newCar).then(res => {
-      this.setState({
-        vehiclesToDisplay: res.data.vehicles
-      })
+    axios.post(BASE_URL +'/vehicles').then(response=>{
+ this.setState({vehiclesToDisplay: response.data.vehicles})
     })
-  }
-    // axios (POST)
-    // setState with response -> vehiclesToDisplay
   }
 
   addBuyer() {
@@ -125,8 +116,7 @@ class App extends Component {
 
   // Do not edit the code below
   resetData(dataToReset) {
-    axios
-      .get('https://joes-autos.herokuapp.com/api/' + dataToReset + '/reset')
+    axios.get('https://joes-autos.herokuapp.com/api/' + dataToReset + '/reset')
       .then(res => {
         if (dataToReset === 'vehicles') {
           this.setState({ vehiclesToDisplay: res.data.vehicles });
